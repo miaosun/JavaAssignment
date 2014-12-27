@@ -62,7 +62,6 @@ public class OperationPanel extends JPanel {
 	public OperationPanel(MainFrame parentFrame) {
 
 		this.parentFrame = parentFrame;
-
 		this.setLayout(new BorderLayout());
 
 		//bottom area
