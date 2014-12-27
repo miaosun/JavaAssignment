@@ -35,7 +35,7 @@ public class MainFrame extends JFrame {
 	/**
 	 * The textarea for displaying matrix operation result
 	 */
-	protected JTextArea resultArea;
+	protected JTextArea resultTextArea;
 
 	public MainFrame(String title) {
 
@@ -44,24 +44,30 @@ public class MainFrame extends JFrame {
 		Container container = this.getContentPane();
 		container.setLayout(new BorderLayout());
 
+		//
+		// Operation panel, where user input matrix and vector data and carry out operations
+		//
 		operationPanel = new OperationPanel(this);
 		container.add(operationPanel, BorderLayout.CENTER);
 
-		resultArea = new JTextArea(40,30);
-		resultArea.setEditable(false);
-		JScrollPane resultPane = new JScrollPane(resultArea);
+		//
+		// Result text area for displaying operation result
+		//
+		resultTextArea = new JTextArea(40,30);
+		resultTextArea.setEditable(false);
+		JScrollPane resultPane = new JScrollPane(resultTextArea);
 
 		TitledBorder resultBorder = BorderFactory.createTitledBorder("Result:");
 		resultBorder.setTitleColor(Color.BLACK);
 		resultPane.setBorder(resultBorder);
 		container.add(resultPane, BorderLayout.SOUTH);
 
-
+		// Menu bar
 		JMenuBar menuBar = new JMenuBar();
 
-		/**
-		 * File Mune, option with load data from file or save data to file, exit program
-		 */
+		//
+		// File Menu, option with load data from file or save data to file, exit program
+		//
 		JMenu fileMenu = new JMenu("File");
 		JMenuItem loadMenuItem = new JMenuItem("Load");
 		JMenuItem saveMenuItem = new JMenuItem("Save");
@@ -70,20 +76,23 @@ public class MainFrame extends JFrame {
 		fileMenu.add(saveMenuItem);
 		fileMenu.add(exitMenuItem);
 
+		//
+		//action listener for file menu options
+		//
 		loadMenuItem.addActionListener(new LoadActionListener());
 		saveMenuItem.addActionListener(new SaveActionListener());
 		exitMenuItem.addActionListener(new ExitActionListener());
 
 		menuBar.add(fileMenu);
 
-		/**
-		 * Option menu item with options to change look and feel of the program
-		 */
+		//
+		// Option menu item with options to change look and feel of the program
+		//
 		setupLookAndFeelMenu(menuBar);
 
-		/**
-		 * Help Menu, with "About" menu item
-		 */
+		//
+		// Help Menu, with "About" menu item
+		//
 		JMenu helpMenu = new JMenu("Help");
 		JMenuItem aboutMenuItem = new JMenuItem("About");
 		aboutMenuItem.addActionListener(new AboutActionListener());
@@ -178,6 +187,17 @@ public class MainFrame extends JFrame {
 		}
 	}
 
+	/**
+	 *  When the "Load" menu option is clicked, we will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Load the data of matrix, vector and operation result from files.
+	 *  2.  If any problems occur during the load then we'll report
+	 *      them to the user.
+	 *
+	 *  </pre>
+	 */
 	public class LoadActionListener implements ActionListener {
 
 		@Override
@@ -202,7 +222,7 @@ public class MainFrame extends JFrame {
 				BufferedReader resultFromFile = new BufferedReader(new FileReader("result.db"));
 
 				while ( (line = resultFromFile.readLine()) != null )
-					resultArea.append(line+"\n");
+					resultTextArea.append(line+"\n");
 				resultFromFile.close();		
 				
 				JOptionPane.showMessageDialog(rootPane, "Load from file with success!");
@@ -216,6 +236,17 @@ public class MainFrame extends JFrame {
 		}
 	}
 
+	/**
+	 *  When the "Save" menu option is clicked, we will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Save the data of matrix, vector and operation result into files.
+	 *  2.  If any problems occur during the save then we'll report
+	 *      them to the user.
+	 *
+	 *  </pre>
+	 */
 	public class SaveActionListener implements ActionListener {
 
 		@Override
@@ -231,7 +262,7 @@ public class MainFrame extends JFrame {
 				vectorWriter.close();
 
 				FileWriter resultWriter = new FileWriter("result.db", false);
-				resultWriter.write(resultArea.getText());
+				resultWriter.write(resultTextArea.getText());
 				resultWriter.close();
 				JOptionPane.showMessageDialog(rootPane, "Saved to file with success!");
 			}
@@ -243,6 +274,9 @@ public class MainFrame extends JFrame {
 
 	}
 
+	/**
+	 *  When the "Exit" menu option is clicked, the application will be closed.
+	 */
 	public class ExitActionListener implements ActionListener {
 
 		@Override
@@ -254,6 +288,9 @@ public class MainFrame extends JFrame {
 
 	}
 
+	/**
+	 *  When the "About" menu option is clicked, some useful information will show up in a new dialog window.
+	 */
 	public class AboutActionListener implements ActionListener {
 
 		@Override

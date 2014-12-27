@@ -64,7 +64,9 @@ public class OperationPanel extends JPanel {
 		this.parentFrame = parentFrame;
 		this.setLayout(new BorderLayout());
 
-		//bottom area
+		//
+		// The bottomPanel holds the bottoms for operation
+		//
 		luButton = new JButton("LU Pivot");
 		luButton.setToolTipText("Get LU pivot result");
 		inverseButton = new JButton("Inverse");
@@ -73,20 +75,23 @@ public class OperationPanel extends JPanel {
 		clearButton.setToolTipText("Clears all the contents");
 		ToolTipManager.sharedInstance().setInitialDelay(5);
 
-		// Action Listeners
-		luButton.addActionListener(new LUActionListener());
-		inverseButton.addActionListener(new InverseActionListener());
-		clearButton.addActionListener(new ClearActionListener());
-
 		bottomPanel = new JPanel();
 		bottomPanel.add(luButton);
 		bottomPanel.add(inverseButton);
 		bottomPanel.add(clearButton);
 
 		this.add(bottomPanel, BorderLayout.SOUTH);
+		
+		//
+		// Action Listeners for the buttons
+		//
+		luButton.addActionListener(new LUActionListener());
+		inverseButton.addActionListener(new InverseActionListener());
+		clearButton.addActionListener(new ClearActionListener());
 
-
-		//center area
+		//
+		// Center panel where allows user insert matrix and vector
+		//
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new FlowLayout());
 
@@ -154,7 +159,7 @@ public class OperationPanel extends JPanel {
 				res += "\nDeterminant = " + matrix.CalcDeterminant() + "\n";
 			}
 
-			parentFrame.resultArea.setText(res);
+			parentFrame.resultTextArea.setText(res);
 		}
 	}
 
@@ -203,21 +208,45 @@ public class OperationPanel extends JPanel {
 				res += "\nPivot array\n"; //TODO: + pivot array
 			}
 			
-			parentFrame.resultArea.setText(res);
+			parentFrame.resultTextArea.setText(res);
 		}
 	}
 
+	/**
+	 *  When the "Clear" button is pressed, we will:
+	 *
+	 *  <pre>
+	 *  
+	 *  Clear the content in matrix, vector and result text area
+	 *  
+	 *
+	 *  </pre>
+	 */
 	public class ClearActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			matrixTextArea.setText("");
 			vectorTextArea.setText("");
-			parentFrame.resultArea.setText("");
+			parentFrame.resultTextArea.setText("");
 		}
 
 	}
 
+	/**
+	 *  When the function is called, the app will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Read the content in vector text area and store the data in a string - vector_text
+	 *  2.  Verify if it is a vector, if it has more than 1 line then it is not a vector, result in a exception
+	 *  3.  If it is a vector then split it by any space and extract the user desired input number
+	 *  4.  Organize all the extracted numbers in a Vector
+	 *  
+	 *  @return The intended vector input by user
+	 *
+	 *  </pre>
+	 */
 	public Vector getVector() {
 		String vector_text = vectorTextArea.getText();
 		String[] vector_aux = vector_text.trim().split("\n");
@@ -234,6 +263,20 @@ public class OperationPanel extends JPanel {
 		return vector;
 	}
 
+	/**
+	 *  When the function is called, the app will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Read the content in matrix text area and store the data in a string - matrix_text
+	 *  2.  Split the matrix_text string and store the data line by line in a string array - matrix_aux
+	 *  3.  Split each line by any space and extract the user desired input number
+	 *  4.  Organize all the extracted numbers in a Matrix
+	 *  
+	 *  @return The intended matrix input by user
+	 *
+	 *  </pre>
+	 */
 	public Matrix getMatrix() {
 		String matrix_text = matrixTextArea.getText();	
 		String[] matrix_aux = matrix_text.trim().split("\n");

@@ -45,15 +45,7 @@ public class Matrix {
 			throw new IndexOutOfBoundsException("matrix access error");
 		v.set(i*ncols+j, value);
 	}
-	/*
-	public Matrix assign(Matrix m) {
-		nrows = m.nrows;
-		ncols = m.ncols;
 
-		v = m.v;  //TODO: verify if = work
-		return this;
-	}
-	 */
 	public Matrix mult(Matrix m) {
 		if(ncols != m.nrows)
 			throw new IllegalArgumentException("matrix size does not match");
@@ -120,12 +112,12 @@ public class Matrix {
 	public void lu_fact(Matrix a, Matrix l, Matrix u, int n)
 	{
 		Matrix temp = new Matrix(a);
-		
+
 		double mult;
 		// LU (Doolittle's) decomposition without pivoting
 		for (int k = 0; k < n - 1; k++) {
 			for (int i = k + 1; i < n; i++) {
-				
+
 				if (temp.get(k,k) == 0)
 				{
 					System.out.print("pivot is zero 1\n");

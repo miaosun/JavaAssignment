@@ -37,13 +37,7 @@ public class Vector {
 	public int size() {
 		return this.num;
 	}
-	/*
-	public Vector assign(Vector copy) throws CloneNotSupportedException {
-		if(this.equals(copy))
-			return this;
-		return (Vector)copy.clone();
-	}*/
-	
+
 	public double get(int i) {
 		if(i<0 || i>=num)
 			throw new IndexOutOfBoundsException("vector access error");
