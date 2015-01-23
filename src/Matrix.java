@@ -59,7 +59,6 @@ public class Matrix {
 		for (int i=0;i<nrows;i++) {
 			for (int j=0;j<m.ncols;j++) {
 				for (int k=0;k<ncols;k++) {
-					//matrix(i,j) += ((*this)(i,k) * a(k,j));
 					matrix.set(i, j, matrix.get(i, j) + this.get(i, k) * m.get(k, j));
 				}
 			}
@@ -126,7 +125,7 @@ public class Matrix {
 				mult = temp.get(i,k)/temp.get(k,k);
 				temp.set(i,k,mult);                      // entries of L are saved in temp
 				for (int j = k + 1; j < n; j++) {
-					//temp(i,j) -= mult*temp(k,j);      // entries of U are saved in temp
+					// entries of U are saved in temp
 					temp.set(i, j, temp.get(i, j) - mult*temp.get(k, j));
 				}
 			}
@@ -198,10 +197,8 @@ public class Matrix {
 				if (temp.get(pvti,k) != 0) {
 					mult = temp.get(pvti,k)/temp.get(pvtk,k);
 					temp.set(pvti,k,mult);
-					//double aux = 0.0;
+					
 					for (j = k + 1; j < n; j++) 
-						//temp(pvti,j) -= mult*temp(pvtk,j);
-						//aux = temp.get(pvti, j) - mult*temp.get(pvtk, j);
 						temp.set(pvti, j, temp.get(pvti, j)-mult*temp.get(pvtk, j));
 				}
 			}
@@ -263,8 +260,6 @@ public class Matrix {
 		Matrix p = new Matrix(this.nrows, this.ncols);
 		this.reorder(this, nrows, p);
 
-		//Matrix pa = new Matrix(p.mult(this));
-
 		Matrix inv = new Matrix(nrows, ncols);
 		Vector b = new Vector(ncols);
 		Vector x = new Vector(ncols);
@@ -274,7 +269,6 @@ public class Matrix {
 			b.set(i,1.0);
 			x = lu_solve(l, u, p.mult(b));
 
-			System.out.println(x.toString());
 			for(int j=0; j<ncols; j++)
 				inv.set(j,i,x.get(j));
 			b.set(i, 0.0);
@@ -295,7 +289,6 @@ public class Matrix {
 		{
 			double aux = temp.get(i);
 			for(int j=0; j<i; j++)
-				//temp[i] -= l(i,j) * temp[j];
 				aux -= l.get(i, j) * temp.get(j);
 			temp.set(i, aux);
 		}
@@ -334,7 +327,6 @@ public class Matrix {
 		{
 			double aux = 0.0;
 			for(int j=i+1; j<n; j++)
-				//temp[i] -= u(i,j) *  temp[j];
 				aux -= u.get(i, j) * temp.get(j);
 			temp.set(i, aux/u.get(i, i));
 		}
