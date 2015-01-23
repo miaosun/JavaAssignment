@@ -112,7 +112,7 @@ public class Matrix {
 	public void lu_fact(Matrix a, Matrix l, Matrix u, int n)
 	{
 		Matrix temp = new Matrix(a);
-
+		
 		double mult;
 		// LU (Doolittle's) decomposition without pivoting
 		for (int k = 0; k < n - 1; k++) {
@@ -272,7 +272,9 @@ public class Matrix {
 		for(int i=0; i<nrows; i++)
 		{
 			b.set(i,1.0);
-			x = lu_solve(l, u, b);
+			x = lu_solve(l, u, p.mult(b));
+
+			System.out.println(x.toString());
 			for(int j=0; j<ncols; j++)
 				inv.set(j,i,x.get(j));
 			b.set(i, 0.0);
