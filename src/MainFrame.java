@@ -293,7 +293,7 @@ public class MainFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(rootPane, "Matrix operation ver.1\nThanks for using, enjoy.\nAny problem contact m.sun@cranfield.ac.uk");
+			JOptionPane.showMessageDialog(rootPane, "Matrix operation ver 1.0\nThanks for using, enjoy!\nAny problem contact the author\nMiao Sun: m.sun@cranfield.ac.uk");
 		}
 
 	}

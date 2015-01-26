@@ -116,7 +116,6 @@ public class Matrix {
 		// LU (Doolittle's) decomposition without pivoting
 		for (int k = 0; k < n - 1; k++) {
 			for (int i = k + 1; i < n; i++) {
-
 				if (temp.get(k,k) == 0)
 				{
 					System.out.print("pivot is zero 1\n");
@@ -143,7 +142,7 @@ public class Matrix {
 				u.set(i,j,temp.get(i,j));
 	}
 
-	public void reorder(Matrix a, int n, Matrix p)
+	public void reorder(Matrix a, int n, Matrix p)//, int pivotArray[])
 	{
 		// Note: pivoting information is stored in temperary vector pvt
 
@@ -204,7 +203,9 @@ public class Matrix {
 			}
 		}
 		for (i=0; i<n; i++)
+		{
 			p.set(i,(int) pvt.get(i),1.0);
+		}
 	}
 
 	public String toString() {

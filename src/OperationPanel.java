@@ -122,7 +122,7 @@ public class OperationPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String res = "LU Decomposition with scaled partial pivoting\nOriginal matrix (Doolittle factorisation)\n";
+			String res = "LU Decomposition with scaled partial pivoting\n\nOriginal matrix (Doolittle factorisation)\n";
 			Matrix matrix = getMatrix();
 			res += matrix.toString();
 			Vector vector = getVector();
@@ -141,11 +141,12 @@ public class OperationPanel extends JPanel {
 			{
 				Vector x = new Vector(vector.size());
 				Matrix p = new Matrix(matrix.nrows, matrix.ncols);
+				 
 				matrix.reorder(matrix, matrix.nrows, p);
-
+				
 				Matrix pa = new Matrix(matrix.nrows, matrix.ncols);
 				pa = new Matrix(p.mult(matrix));
-
+				
 				Matrix lower = new Matrix(matrix.nrows, matrix.ncols);
 				Matrix upper = new Matrix(matrix.nrows, matrix.ncols);
 				matrix.lu_fact(pa, lower, upper, matrix.nrows);
@@ -185,6 +186,7 @@ public class OperationPanel extends JPanel {
 			{
 				//Vector x = new Vector(vector.size());
 				Matrix p = new Matrix(matrix.nrows, matrix.ncols);
+				 
 				matrix.reorder(matrix, matrix.nrows, p);
 
 				Matrix pa = new Matrix(matrix.nrows, matrix.ncols);
@@ -200,7 +202,17 @@ public class OperationPanel extends JPanel {
 				res += "\nInverse matrix\n" + inverse.toString();
 
 				res += "\nDeterminant = " + matrix.CalcDeterminant() + "\n";
-				res += "\nPivot array\n"; //TODO: + pivot array
+				
+				res += "\nPivot array: "; 
+				
+				for(int i=0; i<p.ncols; i++)
+				{
+					for(int j=0; j<p.nrows; j++)
+					{
+						if(p.get(i, j) == 1)
+							res += j+1 + " ";
+					}
+				}
 			}
 			
 			parentFrame.resultTextArea.setText(res);
