@@ -91,7 +91,7 @@ public class OperationPanel extends JPanel {
 		bottomPanel.add(clearButton);
 
 		this.add(bottomPanel, BorderLayout.SOUTH);
-		
+
 		//
 		// Action Listeners for the buttons
 		//
@@ -155,10 +155,7 @@ public class OperationPanel extends JPanel {
 	 *  @see Vector#Vector(int)
 	 *  @see Vector#size()
 	 *  @see Vector#toString()
-	 *  
-     *  @exception IllegalArgumentException
-     *              if the sizes user input Matrix and Vector are not match for operations 
-     *              
+	 *  @catch SizeNotMatchException
 	 *  </pre>
 	 */
 	public class LUActionListener implements ActionListener {
@@ -166,16 +163,25 @@ public class OperationPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String res = "LU Decomposition with scaled partial pivoting\n\nOriginal matrix (Doolittle factorisation)\n";
-			Matrix matrix = getMatrix();
+			Matrix matrix = null;
+			try {
+				matrix = getMatrix();
+			} catch (SizeNotMatchException e1) {
+				JOptionPane.showMessageDialog(parentFrame, "ERROR\n"+e1);
+			}
 			res += matrix.toString();
-			Vector vector = getVector();
+			Vector vector = null;
+			try {
+				vector = getVector();
+			} catch (SizeNotMatchException e1) {
+				JOptionPane.showMessageDialog(parentFrame, "ERROR\n"+e1);
+			}
 			res += "\nOriginal vector\n" + vector.toString();
 
 			//error message for size incompatibility
 			if(matrix.ncols != vector.size())
 			{
-				JOptionPane.showMessageDialog(parentFrame, "ERROR\nmatrix and vector size not match for operations");
-				throw new IllegalArgumentException("ERROR\nmatrix and vector size not match for operations");
+				JOptionPane.showMessageDialog(parentFrame, "ERROR\nmatrix and vector size not compatible for operations");
 			}
 
 			if(matrix.CalcDeterminant() == 0)
@@ -185,12 +191,12 @@ public class OperationPanel extends JPanel {
 			{
 				Vector x = new Vector(vector.size());
 				Matrix p = new Matrix(matrix.nrows, matrix.ncols);
-				 
+
 				matrix.reorder(matrix, matrix.nrows, p);
-				
+
 				Matrix pa = new Matrix(matrix.nrows, matrix.ncols);
 				pa = new Matrix(p.mult(matrix));
-				
+
 				Matrix lower = new Matrix(matrix.nrows, matrix.ncols);
 				Matrix upper = new Matrix(matrix.nrows, matrix.ncols);
 				matrix.lu_fact(pa, lower, upper, matrix.nrows);
@@ -230,9 +236,11 @@ public class OperationPanel extends JPanel {
 	 *  @see Matrix#mult(Matrix)
 	 *  @see Matrix#inverse(Matrix, Matrix)
 	 *  @see Matrix#lu_fact(Matrix, Matrix, Matrix, int)
-     *  @exception IllegalArgumentException
-     *              if user input Matrix is not a square Matrix
-     *              
+	 *  @exception SizeNotMatchException
+	 *              if user input Matrix is not a square Matrix
+	 *           
+	 *  @catch SizeNotMatchException
+	 *              
 	 *  </pre>
 	 */
 	public class InverseActionListener implements ActionListener {
@@ -241,13 +249,17 @@ public class OperationPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String res = "Matrix Inversion\n";
 
-			Matrix matrix = getMatrix();
+			Matrix matrix = null;
+			try {
+				matrix = getMatrix();
+			} catch (SizeNotMatchException e1) {
+				JOptionPane.showMessageDialog(parentFrame, "ERROR\n"+e1);
+			}
 			res += "\nOriginal matrix\n" + matrix.toString();
 
 			if(matrix.nrows != matrix.ncols)
 			{
 				JOptionPane.showMessageDialog(parentFrame, "ERROR\nmatrix needs to be square for operations");
-				throw new IllegalArgumentException("ERROR\nmatrix needs to be square for operations");
 			}
 
 			//Vector vector = getVector();
@@ -260,7 +272,7 @@ public class OperationPanel extends JPanel {
 			{
 				//Vector x = new Vector(vector.size());
 				Matrix p = new Matrix(matrix.nrows, matrix.ncols);
-				 
+
 				matrix.reorder(matrix, matrix.nrows, p);
 
 				Matrix pa = new Matrix(matrix.nrows, matrix.ncols);
@@ -276,9 +288,9 @@ public class OperationPanel extends JPanel {
 				res += "\nInverse matrix\n" + inverse.toString();
 
 				res += "\nDeterminant = " + matrix.CalcDeterminant() + "\n";
-				
+
 				res += "\nPivot array: "; 
-				
+
 				for(int i=0; i<p.ncols; i++)
 				{
 					for(int j=0; j<p.nrows; j++)
@@ -288,7 +300,7 @@ public class OperationPanel extends JPanel {
 					}
 				}
 			}
-			
+
 			parentFrame.resultTextArea.setText(res);
 		}
 	}
@@ -324,19 +336,23 @@ public class OperationPanel extends JPanel {
 	 *  4.  Organize all the extracted numbers in a Vector
 	 *  
 	 *  @return The intended vector input by user
+	 *  @throws SizeNotMatchException 
 	 *
 	 *  @see Vector#Vector(int)
 	 *  @see Vector#set(int, double)
-     *  @exception IllegalArgumentException
-     *              if user input Vector is not in right format
-     *              
+	 *  @exception SizeNotMatchException
+	 *              if user input Vector is not in right format
+	 *              
 	 *  </pre>
 	 */
-	public Vector getVector() {
+	public Vector getVector() throws SizeNotMatchException {
 		String vector_text = vectorTextArea.getText();
 		String[] vector_aux = vector_text.trim().split("\n");
-		if(vector_aux.length > 1)
-			throw new IllegalArgumentException("vector not in right format");
+
+		if( vector_aux[0].isEmpty())
+			throw new SizeNotMatchException("Please insert vector");
+		if(vector_aux.length > 1 || vector_aux[0].length()==1)
+			throw new SizeNotMatchException("vector not in right format");
 
 		int n = vector_aux[0].trim().split("\\s+").length;
 		Vector vector = new Vector(n);
@@ -359,23 +375,28 @@ public class OperationPanel extends JPanel {
 	 *  4.  Organize all the extracted numbers in a Matrix
 	 *  
 	 *  @return The intended matrix input by user
+	 *  @throws SizeNotMatchException 
 	 *
 	 *  @see Matrix#Matrix(int, int)
 	 *  @see Matrix#set(int, int, double)
-     *  @exception IllegalArgumentException
-     *              if user input Matrix is not in right format
-     *              
+	 *  @exception SizeNotMatchException
+	 *              if user input Matrix is not in right format
+	 *              
 	 *  </pre>
 	 */
-	public Matrix getMatrix() {
+	public Matrix getMatrix() throws SizeNotMatchException{
 		String matrix_text = matrixTextArea.getText();	
 		String[] matrix_aux = matrix_text.trim().split("\n");
 		int ncols = matrix_aux[0].trim().split("\\s+").length;
-		if(matrix_aux.length > 1)
+		if(matrix_aux[0].isEmpty())
+		{
+			throw new SizeNotMatchException("Please insert matrix"); 
+		}
+		if(matrix_aux.length > 1 || matrix_aux[0].length()==1)
 		{
 			for(int i=1; i<matrix_aux.length; i++)
 				if(ncols != matrix_aux[i].trim().split("\\s+").length)
-					throw new IllegalArgumentException("matrix not in right format");
+					throw new SizeNotMatchException("matrix not in right format");
 		}
 
 		Matrix matrix = new Matrix(matrix_aux.length, ncols);
@@ -388,5 +409,18 @@ public class OperationPanel extends JPanel {
 			}
 		}
 		return matrix;
+	}
+
+	/*
+	 *  SizeNotMatchException class
+	 *  used when Matrix or Vector size not match
+	 */
+	public class SizeNotMatchException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		public SizeNotMatchException(String message) {
+			super(message);
+		}
 	}
 }
