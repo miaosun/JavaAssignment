@@ -67,6 +67,7 @@ public class OperationPanel extends JPanel {
 
 	/*
 	 * OperationPanel constructor
+	 * @param parentFrame  the parent frame: main frame of the application
 	 */
 	public OperationPanel(MainFrame parentFrame) {
 

@@ -4,7 +4,7 @@ import javax.swing.SwingUtilities;
 /**
  *  This class is the main driver for the app. <p>
  *
- *  It creates the Main Frame which contains the operation and result panels.
+ *  It creates the Main Frame which contains menu, the operation and result panels.
  *  It then displays the GUI frame to the user.
  *
  *  @author Miao Sun
