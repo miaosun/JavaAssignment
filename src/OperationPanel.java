@@ -155,7 +155,7 @@ public class OperationPanel extends JPanel {
 	 *  @see Vector#Vector(int)
 	 *  @see Vector#size()
 	 *  @see Vector#toString()
-	 *  @catch SizeNotMatchException
+	 *  
 	 *  </pre>
 	 */
 	public class LUActionListener implements ActionListener {
@@ -236,10 +236,6 @@ public class OperationPanel extends JPanel {
 	 *  @see Matrix#mult(Matrix)
 	 *  @see Matrix#inverse(Matrix, Matrix)
 	 *  @see Matrix#lu_fact(Matrix, Matrix, Matrix, int)
-	 *  @exception SizeNotMatchException
-	 *              if user input Matrix is not a square Matrix
-	 *           
-	 *  @catch SizeNotMatchException
 	 *              
 	 *  </pre>
 	 */
