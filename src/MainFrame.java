@@ -20,13 +20,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
-
+/*
+ * The Main Frame of the Application
+ * Consists of 3 parts: 
+ * 1. upper side is a menu which consists 3 sub menus: File (Save, Load and Exit), Look and Feel(several themes) and About
+ * 2. middle side is the Operation Panel   @see OperationPanel
+ * 3. lower part is the result panel, for showing operational results 
+ */
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The Panel for operations (input matrix and vector data)
+	 * The Panel for operations (input matrix and vector data), 
 	 */
 	protected OperationPanel operationPanel;
 
@@ -35,6 +41,10 @@ public class MainFrame extends JFrame {
 	 */
 	protected JTextArea resultTextArea;
 
+	/*
+	 *  MainFrame constructor
+	 *  @param title  the application's title
+	 */
 	public MainFrame(String title) {
 
 		setTitle(title);
@@ -267,9 +277,7 @@ public class MainFrame extends JFrame {
 			catch (IOException e1) {
 				JOptionPane.showMessageDialog(rootPane, "Error occured during saving!");
 			}
-
 		}
-
 	}
 
 	/**

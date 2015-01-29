@@ -14,7 +14,13 @@ import javax.swing.JTextArea;
 import javax.swing.ToolTipManager;
 import javax.swing.border.TitledBorder;
 
-
+/*
+ * The Operation Panel of the Application
+ * Consists of 3 parts: 
+ * 1. left upper side is a text area for user to input Matrix
+ * 2. right upper side is a text area for user to input Vector
+ * 3. lower part has 3 buttons: one for computing LU Pivot, one for Matrix inversion, last one for clearing the text areas. 
+ */
 public class OperationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -59,6 +65,9 @@ public class OperationPanel extends JPanel {
 	 */
 	protected JTextArea vectorTextArea;
 
+	/*
+	 * OperationPanel constructor
+	 */
 	public OperationPanel(MainFrame parentFrame) {
 
 		this.parentFrame = parentFrame;
@@ -118,6 +127,39 @@ public class OperationPanel extends JPanel {
 
 	}
 
+	/**
+	 *  When the LU Pivot button is clicked, the app will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Get the user input Matrix and Vector from Matrix and Vector text area
+	 *  2.  Verify if the sizes of Matrix and Vector match for operation, if it is not, result in a exception
+	 *  3.  Calculate its determinant, if it is <code>0</code>, it is a singular Matrix, ends the computation and show the result in result panel
+	 *  4.  Compute the reordered Matrix
+	 *  5.  Compute the lower and upper Matrix
+	 *  6.  Solve the differential system
+	 *  7.  Display all the information in the result panel @see {@link MainFrame#resultTextArea}
+	 *
+	 *  @see OperationPanel#getMatrix()
+	 *  @see OperationPanel#getVector()
+	 *  @see Matrix#toString()
+	 *  @see Matrix#CalcDeterminant()
+	 *  @see Matrix#Matrix(int, int)
+	 *  @see Matrix#Matrix(Matrix)
+	 *  @see Matrix#reorder(Matrix, int, Matrix)
+	 *  @see Matrix#mult(Matrix)
+	 *  @see Matrix#inverse(Matrix, Matrix)
+	 *  @see Matrix#lu_fact(Matrix, Matrix, Matrix, int)
+	 *  @see Matrix#lu_solve(Matrix, Matrix, Vector)
+	 *  @see Vector#Vector(int)
+	 *  @see Vector#size()
+	 *  @see Vector#toString()
+	 *  
+     *  @exception IllegalArgumentException
+     *              if the sizes user input Matrix and Vector are not match for operations 
+     *              
+	 *  </pre>
+	 */
 	public class LUActionListener implements ActionListener {
 
 		@Override
@@ -132,6 +174,7 @@ public class OperationPanel extends JPanel {
 			if(matrix.ncols != vector.size())
 			{
 				JOptionPane.showMessageDialog(parentFrame, "ERROR\nmatrix and vector size not match for operations");
+				throw new IllegalArgumentException("ERROR\nmatrix and vector size not match for operations");
 			}
 
 			if(matrix.CalcDeterminant() == 0)
@@ -164,6 +207,33 @@ public class OperationPanel extends JPanel {
 		}
 	}
 
+	/**
+	 *  When the inverse button is clicked, the app will:
+	 *
+	 *  <pre>
+	 *
+	 *  1.  Get the user input Matrix from Matrix text area
+	 *  2.  Verify if it is a square matrix, if it is not, result in a exception
+	 *  3.  Calculate its determinant, if it is <code>0</code>, it is a singular Matrix, ends the computation and show the result in result panel
+	 *  4.  Compute the lower and upper Matrix
+	 *  5.  Compute the inversed Matrix
+	 *  6.  Compute the pivot array
+	 *  7.  Display all the information in the result panel  @see {@link MainFrame#resultTextArea}
+	 *
+	 *  @see OperationPanel#getMatrix()
+	 *  @see Matrix#CalcDeterminant()
+	 *  @see Matrix#toString()
+	 *  @see Matrix#Matrix(int, int)
+	 *  @see Matrix#Matrix(Matrix)
+	 *  @see Matrix#reorder(Matrix, int, Matrix)
+	 *  @see Matrix#mult(Matrix)
+	 *  @see Matrix#inverse(Matrix, Matrix)
+	 *  @see Matrix#lu_fact(Matrix, Matrix, Matrix, int)
+     *  @exception IllegalArgumentException
+     *              if user input Matrix is not a square Matrix
+     *              
+	 *  </pre>
+	 */
 	public class InverseActionListener implements ActionListener {
 
 		@Override
@@ -174,7 +244,10 @@ public class OperationPanel extends JPanel {
 			res += "\nOriginal matrix\n" + matrix.toString();
 
 			if(matrix.nrows != matrix.ncols)
+			{
 				JOptionPane.showMessageDialog(parentFrame, "ERROR\nmatrix needs to be square for operations");
+				throw new IllegalArgumentException("ERROR\nmatrix needs to be square for operations");
+			}
 
 			//Vector vector = getVector();
 			//res += "\nOriginal vector\n" + vector.toString();
@@ -226,7 +299,6 @@ public class OperationPanel extends JPanel {
 	 *  
 	 *  Clear the content in matrix, vector and result text area
 	 *  
-	 *
 	 *  </pre>
 	 */
 	public class ClearActionListener implements ActionListener {
@@ -252,6 +324,11 @@ public class OperationPanel extends JPanel {
 	 *  
 	 *  @return The intended vector input by user
 	 *
+	 *  @see Vector#Vector(int)
+	 *  @see Vector#set(int, double)
+     *  @exception IllegalArgumentException
+     *              if user input Vector is not in right format
+     *              
 	 *  </pre>
 	 */
 	public Vector getVector() {
@@ -282,6 +359,11 @@ public class OperationPanel extends JPanel {
 	 *  
 	 *  @return The intended matrix input by user
 	 *
+	 *  @see Matrix#Matrix(int, int)
+	 *  @see Matrix#set(int, int, double)
+     *  @exception IllegalArgumentException
+     *              if user input Matrix is not in right format
+     *              
 	 *  </pre>
 	 */
 	public Matrix getMatrix() {
